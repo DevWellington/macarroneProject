@@ -13,23 +13,20 @@
 
           <?php 
 
-            $get = $_GET['page'];
+            $route = parse_url("http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
 
-            switch ($get) {
-              case 'home':
-                require_once './includes/home.php';
+            switch ($route['path']) {
+              case '/empresa':
+                require_once './includes'.$route['path'].'.php';
                 break;
-              case 'empresa':
-                require_once './includes/empresa.php';
+              case '/produtos':
+                require_once './includes'.$route['path'].'.php';
                 break;
-              case 'produtos':
-                require_once './includes/produtos.php';
+              case '/servicos':
+                require_once './includes'.$route['path'].'.php';
                 break;
-              case 'servicos':
-                require_once './includes/servicos.php';
-                break;
-              case 'contato':
-                require_once './includes/contato.php';
+              case '/contato':
+                require_once './includes'.$route['path'].'.php';
                 break;
               default:
                 require_once './includes/home.php';
