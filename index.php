@@ -13,25 +13,52 @@
 
           <?php 
 
-            $route = parse_url("http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+            function IncludeFilesOfRoute($_path, $_arRoutes){
+              
+              $filePath = './includes/';
 
-            switch ($route['path']) {
-              case '/empresa':
-                require_once './includes'.$route['path'].'.php';
-                break;
-              case '/produtos':
-                require_once './includes'.$route['path'].'.php';
-                break;
-              case '/servicos':
-                require_once './includes'.$route['path'].'.php';
-                break;
-              case '/contato':
-                require_once './includes'.$route['path'].'.php';
-                break;
-              default:
-                require_once './includes/home.php';
-                break;
+              if (!file_exists($filePath.$_path.'.php') && ($_path !== '')){
+                require_once $filePath.'404.php';
+              } else {
+
+                foreach ($_arRoutes as $key => $value) {
+
+                  if ($_path == $value){
+                    require_once $filePath. $_path.'.php';
+                    break;
+                  } elseif ($_path == ''){
+                    require_once $filePath.'home.php';
+                    break;
+                  }
+                }
+              }
             }
+
+            $arRoutes = ['home', 'empresa', 'produtos', 'servicos', 'contato'];
+            // $filePath = './includes/';
+
+            $route = parse_url("http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+            $path = explode('/', $route['path'])[1];
+
+            IncludeFilesOfRoute($path, $arRoutes);
+
+
+/*
+            if (!file_exists($filePath.$path.'.php') && ($path !== '')){
+              require_once './includes/404.php';
+            } else {
+
+              foreach ($arRoutes as $key => $value) {
+
+                if ($path == $value){
+                  require_once $filePath. $path.'.php';
+                  break;
+                } elseif ($path == ''){
+                  require_once $filePath.'home.php';
+                  break;
+                }
+              }
+            }*/
 
           ?>
 
