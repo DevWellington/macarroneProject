@@ -14,7 +14,7 @@
           <?php 
 
 
-            $arRoutes = ['home', 'empresa', 'produtos', 'servicos', 'contato'];
+            $arRoutes = ['empresa', 'produtos', 'servicos', 'contato'];
 
             $route = parse_url("http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
             $path = explode('/', $route['path'])[1];
