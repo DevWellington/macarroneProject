@@ -11,6 +11,31 @@ echo "--     Inicio da Fixture - Paginas    --".PHP_EOL;
 echo str_repeat('#', 40).PHP_EOL;
 echo str_repeat('#', 40).PHP_EOL;
 
+echo "--       Criando table: paginas       --".PHP_EOL;
+echo str_repeat('#', 40).PHP_EOL;
+echo '#'.str_repeat(' ', 38).'#'.PHP_EOL;
+
+$dbname = Connection::getConfig()['dbname'];
+$sql = "CREATE TABLE IF NOT EXISTS $dbname.paginas (
+			idpaginas INT NOT NULL PRIMARY KEY AUTO_INCREMENT ,
+			nome VARCHAR(100) NULL ,
+			title VARCHAR(100) NULL ,
+			descricao VARCHAR(255) NULL ,
+			linkImage VARCHAR(45) NULL
+		)
+";
+
+
+$stmt = $conn->prepare($sql);
+if ($stmt->execute())
+	echo "--       *Criou table: paginas       --".PHP_EOL;
+else
+	echo "***Error".PHP_EOL;
+
+echo '#'.str_repeat(' ', 38).'#'.PHP_EOL;
+echo str_repeat('#', 40).PHP_EOL;
+
+
 echo "--      Limpando table: paginas       --".PHP_EOL;
 
 

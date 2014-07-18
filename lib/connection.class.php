@@ -12,6 +12,10 @@ class Connection extends PDO
 			'pass' => ''
 		);
 
+	public static function getConfig(){
+		return self::$arConfig;
+	}
+
     public static function getConnection() {
 
         if(!isset(self::$conn)){
