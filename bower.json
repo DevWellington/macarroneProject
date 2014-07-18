@@ -1,0 +1,25 @@
+{
+  "name": "macarroneProject",
+  "version": "0.3.1",
+  "homepage": "https://github.com/DevWellington/macarroneProject",
+  "authors": [
+    "Wellington Ribeiro <devwellington@gmail.com>"
+  ],
+  "description": "Project CodeEducation",
+  "keywords": [
+    "php",
+    "mysql",
+    "js"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.2.0"
+  }
+}
