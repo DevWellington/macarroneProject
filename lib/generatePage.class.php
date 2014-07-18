@@ -11,36 +11,52 @@ class generatePage
 		$obj = null;
 		$htmlReturn = null;
 
-		$sql = "SELECT * FROM paginas WHERE nome = :nome";
+		if (isset($_POST['search'])){
+			$sql = "SELECT * FROM paginas WHERE descricao like :descricao AND NOT nome = '404'";
 
-		$stmt = $pdo->prepare($sql);
-		$stmt->bindValue(':nome', $route);
+			$paramSearch = '%'.$_POST['search'].'%';
 
+			$stmt = $pdo->prepare($sql);
+			$stmt->bindValue(':descricao', $paramSearch);
 
-		if ($stmt->execute()){
+			$stmt->execute();
 
-			if ($obj = $stmt->fetch(PDO::FETCH_OBJ)){
-				$htmlReturn = self::getHTML($obj);
-
+			if ($obj = $stmt->fetchAll(PDO::FETCH_OBJ)){
+				echo self::getHTMLSearch($obj);
 			} else {
+				echo "<h1 class='cover-heading'>A Pesquisa não encontrou resultados</h1>";
+			}
 
-				header('HTTP/1.0 404 Not Found');
+		} else {
 
-				$sql = "SELECT * FROM paginas WHERE nome = '404'";
+			$sql = "SELECT * FROM paginas WHERE nome = :nome";
 
-				$stmt = $pdo->prepare($sql);
-				$stmt->execute();
-				$obj = $stmt->fetch(PDO::FETCH_OBJ);
+			$stmt = $pdo->prepare($sql);
+			$stmt->bindValue(':nome', $route);
 
-				$htmlReturn = self::getHTML($obj);
+			if ($stmt->execute()){
+
+				if ($obj = $stmt->fetch(PDO::FETCH_OBJ)){
+					$htmlReturn = self::getHTML($obj);
+
+				} else {
+
+					header('HTTP/1.0 404 Not Found');
+
+					$sql = "SELECT * FROM paginas WHERE nome = '404'";
+
+					$stmt = $pdo->prepare($sql);
+					$stmt->execute();
+					$obj = $stmt->fetch(PDO::FETCH_OBJ);
+
+					$htmlReturn = self::getHTML($obj);
+				}
+
 			}
 
 		}
 
-
 		return $htmlReturn;
-
-		var_dump($obj);
 	}
 
 	private static function getHTML(\stdClass $obj){
@@ -62,6 +78,23 @@ class generatePage
 		return $html;
 
 	}
+
+	private static function getHTMLSearch($obj){
+
+		$html = "<div class='inner cover'>\n";
+		$html .= "\t<h1 class='cover-heading'>Pesquisar</h1>\n";
+
+		foreach ($obj as $key => $value) {
+			$html .= "\t<p class='lead'>\n";
+			$html .= "\t\t<p>Página: <a href='".$value->nome."'>".$value->nome." </a></p>";
+			$html .= $value->descricao ."\n";
+			$html .= "\t</p>\n";
+		}
+
+		$html .= "</div>";
+
+		return $html;
+	}	
 
 	public static function getReturnContato(){
 
