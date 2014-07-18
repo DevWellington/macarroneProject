@@ -13,31 +13,38 @@
 
           <?php 
 
+            $filePath = './includes/';
 
-            $arRoutes = ['empresa', 'produtos', 'servicos', 'contato'];
+            require_once "lib/route.class.php";
+            require_once "lib/connection.class.php";
+            require_once "lib/generatePage.class.php";
 
-            $route = parse_url("http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
-            $path = explode('/', $route['path'])[1];
+            $pdo = Connection::getConnection();
+            $route = Route::getRoute();
 
-            $includeFilesOfRoute = function ($x) use ($path){
+            $page = generatePage::getPage($pdo, $route);
 
-              $filePath = './includes/';
-              
-              if (!file_exists($filePath.$path.'.php') && ($path !== '')){
-                require_once $filePath.'404.php';
-              } else {              
+            echo $page;
 
-                if ($x == $path){
-                  require_once $filePath. $path.'.php';
-                } elseif ($path == ''){
-                  require_once $filePath.'home.php';
-                }
+          ?>
 
+          <?php if ($route === 'contato'): ?>
+              <div class="input-group">
+
+              <form action="#" method="post" >
+                <input type="text" class="form-control" name='nome' placeholder="Nome">
+                <input type="text" class="form-control" name='email' placeholder="Email">
+                <input type="text" class="form-control" name='assunto' placeholder="Assunto">
+                <textarea class="form-control" name="msg" rows="2">Mensagem</textarea>
+
+              <input style="color: black" type="submit" value="Enviar" />
+              </form>
+            </div>
+          <?php endif; 
+
+              if (isset($_POST['nome']) or isset($_POST['email']) or isset($_POST['assunto'])){
+                echo generatePage::getReturnContato();
               }
-            };
-
-            array_walk($arRoutes, $includeFilesOfRoute);
-
           ?>
 
           <?php require_once './includes/footer.php'; ?>
