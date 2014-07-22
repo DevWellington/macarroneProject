@@ -80,11 +80,74 @@ else
 
 
 
+// Users Table
+
+
+echo "--       Criando table: users         --".PHP_EOL;
+echo str_repeat('#', 40).PHP_EOL;
+echo '#'.str_repeat(' ', 38).'#'.PHP_EOL;
+
+$sql = "CREATE TABLE IF NOT EXISTS users (
+			id int(11) PRIMARY KEY NOT NULL,
+			login varchar(50) UNIQUE KEY NOT NULL,
+			pass varchar(255) NOT NULL,
+			dateCreated datetime NOT NULL
+		)
+";
+
+$stmt = $conn->prepare($sql);
+if ($stmt->execute())
+	echo "--       *Criou table: users         --".PHP_EOL;
+else
+	echo "***Error".PHP_EOL;
+
 echo '#'.str_repeat(' ', 38).'#'.PHP_EOL;
 echo str_repeat('#', 40).PHP_EOL;
+
+
+echo "--      Limpando table: users         --".PHP_EOL;
+
+
+// Clean table
+$sql = "TRUNCATE users";
+
+echo str_repeat('#', 40).PHP_EOL;
+echo '#'.str_repeat(' ', 38).'#'.PHP_EOL;
+
+$stmt = $conn->prepare($sql);
+if ($stmt->execute())
+	echo "--       *Limpou table: users         --".PHP_EOL;
+else
+	echo "***Error".PHP_EOL;
+
+
+echo '#'.str_repeat(' ', 38).'#'.PHP_EOL;
+
+echo str_repeat('#', 40).PHP_EOL;
+echo "--  Preparando dados para insercao    --".PHP_EOL;
+echo str_repeat('#', 40).PHP_EOL;
+
+echo '#'.str_repeat(' ', 38).'#'.PHP_EOL;
+
+
+$pass = password_hash('admin', PASSWORD_DEFAULT);
+$sql = "INSERT INTO users (login, pass, dateCreated) 
+		VALUES ('admin', '".$pass."', now())
+";
+
+$stmt = $conn->prepare($sql);
+if ($stmt->execute())
+	echo "--    *Dados inseridos com Sucesso!   --".PHP_EOL;
+else
+	echo "***Error".PHP_EOL;
+
+
+
+
+echo '#'.str_repeat(' ', 38).'#'.PHP_EOL;
 echo str_repeat('#', 40).PHP_EOL;
 
 
-
+echo str_repeat('#', 40).PHP_EOL;
 echo "--      FIM da Fixture - Paginas      --".PHP_EOL;
 echo str_repeat('#', 40).PHP_EOL;
