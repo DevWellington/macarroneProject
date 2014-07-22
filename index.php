@@ -15,6 +15,8 @@
 
             $filePath = './includes/';
 
+            date_default_timezone_set('America/Sao_Paulo');
+
             require_once "lib/route.class.php";
             require_once "lib/connection.class.php";
             require_once "lib/generatePage.class.php";
