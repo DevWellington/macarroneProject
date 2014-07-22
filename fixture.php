@@ -129,13 +129,13 @@ echo str_repeat('#', 40).PHP_EOL;
 
 echo '#'.str_repeat(' ', 38).'#'.PHP_EOL;
 
-
 $pass = password_hash('admin', PASSWORD_DEFAULT);
 $sql = "INSERT INTO users (login, pass, dateCreated) 
-		VALUES ('admin', '".$pass."', now())
+		VALUES ('admin', :pass, now())
 ";
 
 $stmt = $conn->prepare($sql);
+$stmt->bindParam(':pass', $pass);
 if ($stmt->execute())
 	echo "--    *Dados inseridos com Sucesso!   --".PHP_EOL;
 else
