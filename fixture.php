@@ -19,9 +19,7 @@ $dbname = Connection::getConfig()['dbname'];
 $sql = "CREATE TABLE IF NOT EXISTS $dbname.paginas (
 			idpaginas INT NOT NULL PRIMARY KEY AUTO_INCREMENT ,
 			nome VARCHAR(100) NULL ,
-			title VARCHAR(100) NULL ,
-			descricao VARCHAR(255) NULL ,
-			linkImage VARCHAR(45) NULL
+			descricao LONGTEXT NULL
 		)
 ";
 
@@ -63,13 +61,14 @@ echo '#'.str_repeat(' ', 38).'#'.PHP_EOL;
 
 
 // Insert data
-$sql = "INSERT INTO paginas (nome, title, descricao, linkImage) VALUES 
-			('home', 'Seja bem vindo', 'SadTech is a corporation started by Alec Sadler and one of the founding members of the Corporate Congress.', null),
-			('empresa', 'SadTech', 'SadTech builds advanced technology such as the Cellular Memory Review liquid chip technology, the CPS Suit and the Quantum Device.', 'imgs/File-SadTech.jpg'),
-			('produtos', 'Produtos', 'Cellular Memory Review, or CMR, is a technology which interfaces with the user allowing them to create a heads-up display over their own eyesight and access databases.', 'imgs/cmr.jpg'),
-			('servicos', 'Servico', 'The CPS Suit is an advanced clothing material worn by CPS protectors. - Changing color - Invisibility - Electric shock - Hacking ATMs', 'imgs/cps.jpg'),
-			('contato', 'Contato', null, null),
-			('404', 'Page not found', 'Error Code: 404', null)
+$sql = "INSERT INTO paginas (nome, descricao) VALUES 
+			('home', 'SadTech is a corporation started by Alec Sadler and one of the founding members of the Corporate Congress.'),
+			('empresa', 'SadTech builds advanced technology such as the Cellular Memory Review liquid chip technology, the CPS Suit and the Quantum Device.'),
+			('produtos', 'Cellular Memory Review, or CMR, is a technology which interfaces with the user allowing them to create a heads-up display over their own eyesight and access databases.'),
+			('servicos', 'The CPS Suit is an advanced clothing material worn by CPS protectors. - Changing color - Invisibility - Electric shock - Hacking ATMs'),
+			('contato', 'Contato'),
+			('404', '<h1>Page not found</h1>Error Code: 404'),
+			('login', null)
 ";
 
 $stmt = $conn->prepare($sql);
@@ -78,6 +77,9 @@ if ($stmt->execute())
 else
 	echo "***Error".PHP_EOL;
 
+echo '#'.str_repeat(' ', 38).'#'.PHP_EOL;
+
+echo str_repeat('#', 40).PHP_EOL;
 
 
 // Users Table
