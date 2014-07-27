@@ -1,7 +1,6 @@
 <?php
 
-class Connection extends PDO
-{
+class Connection extends PDO{
 	
 	public static $conn;
 	public static $arConfig = array(
@@ -34,5 +33,3 @@ class Connection extends PDO
         return self::$conn;
     }	
 }
-
-// var_dump(Connection::getConnection());
