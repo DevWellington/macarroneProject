@@ -29,60 +29,86 @@ class generatePage
 
 		} else {
 
-			$sql = "SELECT * FROM paginas WHERE nome = :nome";
+			if ($route === "login"){
+				echo self::getLoginPage();
+			} else {
 
-			$stmt = $pdo->prepare($sql);
-			$stmt->bindValue(':nome', $route);
+				$sql = "SELECT * FROM paginas WHERE nome = :nome";
 
-			if ($stmt->execute()){
+				$stmt = $pdo->prepare($sql);
+				$stmt->bindValue(':nome', $route);
 
-				if ($obj = $stmt->fetch(PDO::FETCH_OBJ)){
-					$htmlReturn = self::getHTML($obj);
+				if ($stmt->execute()){
 
-				} else {
+					if ($obj = $stmt->fetch(PDO::FETCH_OBJ)){
+						$htmlReturn = self::getHTML($obj);
+					} else {
 
-					header('HTTP/1.0 404 Not Found');
+						header('HTTP/1.0 404 Not Found');
 
-					$sql = "SELECT * FROM paginas WHERE nome = '404'";
+						$sql = "SELECT * FROM paginas WHERE nome = '404'";
 
-					$stmt = $pdo->prepare($sql);
-					$stmt->execute();
-					$obj = $stmt->fetch(PDO::FETCH_OBJ);
+						$stmt = $pdo->prepare($sql);
+						$stmt->execute();
+						$obj = $stmt->fetch(PDO::FETCH_OBJ);
 
-					$htmlReturn = self::getHTML($obj);
+						$htmlReturn = self::getHTML($obj);
+					}
 				}
-
 			}
-
 		}
+
+		return $htmlReturn;
+	}
+
+	private static function getLoginPage(){
+		session_start();
+		unset($_SESSION['user']);
+		unset($_SESSION['logado']);		
+
+		$getError = (isset($_GET['error'])) ? $_GET['error'] : '';
+
+		$htmlReturn = '
+			<h2>Menu administrativo</h2>
+			<p id="pReturn" style="color: red; font-weight: bold; font-size: 30px">'.$getError.'</p>
+
+			<form class="form-horizontal" method="post" action="./admin">
+				<div class="control-group">
+					<label class="control-label" for="user">Login</label>
+					<div class="controls">
+						<input name="user" style="color: black;" type="text" placeholder="Digite o seu usuario..." />
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label" for="pass">Password</label>
+					<div class="controls">
+						<input name="pass" style="color: black;" type="password" placeholder="Digite a sua senha..." />
+					</div>
+				</div>
+				<br />
+				<div class="control-group">
+					<div class="controls">
+						<button class="btn btn-info" type="submit">Acessar</button>
+					</div>
+				</div>
+			</form>
+		';
 
 		return $htmlReturn;
 	}
 
 	private static function getHTML(\stdClass $obj){
 
-		$html  = "<div class='inner cover'>\n";
-		$html .= "\t<h1 class='cover-heading'>".$obj->title."</h1>\n";
-		$html .= "\t<p class='lead'>\n";
-		$html .= "\t\t". $obj->descricao ."\n";
-		$html .= "\t</p>\n";
-
-		if ($obj->linkImage != ''){
-			$html .= "\t<center>\n";
-			$html .= "\t\t<img src='".$obj->linkImage."' class='img-responsive' height='-1' width='-1'>\n";
-			$html .= "\t</center>\n";
-		}
-
-		$html .= "</div>";
+		$html = "\t". $obj->descricao ."\n";
 
 		return $html;
-
 	}
 
 	private static function getHTMLSearch($obj){
 
 		$html = "<div class='inner cover'>\n";
-		$html .= "\t<h1 class='cover-heading'>Pesquisar</h1>\n";
+		$html .= "\t<h1 class='cover-heading'>Resultado Pesquisa</h1>\n";
 
 		foreach ($obj as $key => $value) {
 			$html .= "\t<p class='lead'>\n";
@@ -114,5 +140,37 @@ class generatePage
 
 		return $html;
 
+	}
+
+	public static function getMenu(\PDO $pdo){
+
+		$htmlReturn = '<h1> Menu Administrativo do Site</h1>';
+
+		$sql = "SELECT nome FROM paginas WHERE NOT nome = 'login'";
+		$stmt = $pdo->prepare($sql);
+		$stmt->execute();
+
+		if ($obj = $stmt->fetchAll(PDO::FETCH_OBJ)){
+			foreach ($obj as $key => $value) {
+				$htmlReturn .= '<p><a href="#'.$value->nome.'" style="margin: 10px;" id="'.$value->nome.'" class="btn btn-primary btn-large">'.$value->nome.'</a></p>';
+			}
+		}
+		
+		return $htmlReturn;
+	}
+
+	public static function getContentPage(\PDO $pdo, $page){
+
+		$contentPage = null;
+
+		$sql = "SELECT descricao FROM paginas where nome = :nome";
+		$stmt = $pdo->prepare($sql);
+
+		$stmt->bindParam(':nome', $page);
+		$stmt->execute();
+		if($obj = $stmt->fetch(PDO::FETCH_OBJ))
+			$contentPage = ($obj->descricao) ? $obj->descricao : '';
+
+		return $contentPage;
 	}
 }
