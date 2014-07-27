@@ -3,8 +3,7 @@
 /**
 * Classe retorna a rota acessada
 */
-class Route
-{
+class Route{
 
 	public static function getRoute(){
 
@@ -16,4 +15,11 @@ class Route
         return $route;
 	}
 
+	public static function getFullRoute(){
+
+		$url = parse_url("http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+		$route = explode('/', $url['path']);
+
+        return $route;
+	}
 }
