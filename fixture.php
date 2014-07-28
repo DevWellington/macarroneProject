@@ -90,7 +90,7 @@ echo str_repeat('#', 40).PHP_EOL;
 echo '#'.str_repeat(' ', 38).'#'.PHP_EOL;
 
 $sql = "CREATE TABLE IF NOT EXISTS users (
-			id int(11) PRIMARY KEY NOT NULL,
+			id int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
 			login varchar(50) UNIQUE KEY NOT NULL,
 			pass varchar(255) NOT NULL,
 			dateCreated datetime NOT NULL
